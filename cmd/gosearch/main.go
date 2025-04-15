@@ -57,6 +57,10 @@ func main() {
 			break
 		}
 
-		fmt.Println("Ответ сервера:\n", buf.String())
+		if buf.Len() == 0 {
+			fmt.Println("Сервер не завершил сканирование, или ответа не существует")
+		} else {
+			fmt.Println("Ответ сервера:\n", buf.String())
+		}
 	}
 }
