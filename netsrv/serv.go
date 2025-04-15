@@ -11,7 +11,7 @@ import (
 	"github.com/SayHelloLexa/searcher/pkg/crawler/spider"
 )
 
-// scan - функция для сканирования сайтов
+// Scan - функция для сканирования сайтов
 func scan() (map[string]crawler.Document, error) {
 	c := spider.New()
 	urls := []string{"https://go.dev", "https://golang.org"}
@@ -59,6 +59,7 @@ func handler(conn net.Conn, storage map[string]crawler.Document) {
 
 		// Обработка разрыва соединения
 		if input == "exit" {
+			conn.Write([]byte("Connection closed\n"))
 			break
 		}
 
