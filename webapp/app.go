@@ -21,6 +21,13 @@ func docsHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(storage)
 }
 
+func headersMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
+}
+
 var (
 	storage map[string]crawler.Document
 	idx     index.Index
@@ -28,6 +35,7 @@ var (
 
 func main() {
 	r := mux.NewRouter()
+	r.Use(headersMiddleware)
 	r.HandleFunc("/index", idxHandler).Methods(http.MethodGet)
 	r.HandleFunc("/docs", docsHandler).Methods(http.MethodGet)
 
