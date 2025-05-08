@@ -5,6 +5,7 @@ import (
 	"github.com/SayHelloLexa/searcher/pkg/crawler"
 	"github.com/SayHelloLexa/searcher/pkg/crawler/spider"
 	"github.com/SayHelloLexa/searcher/pkg/index"
+	"strconv"
 )
 
 // Scan - функция для сканирования сайтов + добавление документов
@@ -31,6 +32,6 @@ func addScanDocuments(d []crawler.Document, storage map[string]crawler.Document,
 	for i, v := range d {
 		v.ID = i
 		idx.Add(v.Title, v.ID)
-		storage[v.Title] = v
+		storage[strconv.Itoa(v.ID)] = v
 	}
 }
