@@ -31,8 +31,8 @@ func New() *API {
 func (api *API) endpoints() {
 	api.Router.Use(jsonHeaderMiddleware, api.scanDocMiddleware)
 
-	api.Router.HandleFunc("/api/v1/docs/{id}", api.getDocById).Methods(http.MethodGet)
 	api.Router.HandleFunc("/api/v1/docs", api.getDocStorage).Methods(http.MethodGet)
+	api.Router.HandleFunc("/api/v1/docs/{id}", api.getDocById).Methods(http.MethodGet)
 	api.Router.HandleFunc("/api/v1/docs/{id}", api.deleteDocById).Methods(http.MethodDelete)
 	api.Router.HandleFunc("/api/v1/docs/{id}", api.createDoc).Methods(http.MethodPost)
 	api.Router.HandleFunc("/api/v1/docs/{id}", api.updDocById).Methods(http.MethodPut, http.MethodPatch)
@@ -114,6 +114,11 @@ func (api *API) updDocById(w http.ResponseWriter, r *http.Request) {
 func (api *API) deleteDocById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
+
+	if _, ok := api.storage[id]; !ok {
+		http.Error(w, "документ не найден в хранилище storage", http.StatusInternalServerError)
+		return
+	}
 
 	delete(api.storage, id)
 }
